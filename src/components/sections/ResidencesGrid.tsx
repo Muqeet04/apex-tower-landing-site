@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 
@@ -139,7 +139,10 @@ export default function ResidencesGrid() {
       : residences.filter((r) => r.type.toUpperCase().includes(activeFilter.replace('S', '')))
 
   return (
-    <section ref={sectionRef} id="residences" className="relative py-28 md:py-36 border-b border-[var(--slate-border)]/40 text-center">
+    <section ref={sectionRef} id="residences" className="relative py-28 md:py-36 border-b border-[var(--slate-border)]/40 text-center overflow-hidden">
+      {/* Background Ambient Blur */}
+      <div className="absolute top-1/3 right-0 w-[700px] h-[700px] bg-[var(--amber-glow)]/5 rounded-full blur-[260px] animate-float-slow pointer-events-none" />
+
       <div className="max-w-[1600px] mx-auto px-8 md:px-16">
         {/* Centered Header */}
         <motion.div
@@ -174,75 +177,82 @@ export default function ResidencesGrid() {
           className="flex flex-wrap items-center justify-center gap-3 mb-12"
         >
           {filterOptions.map((option) => (
-            <button
+            <motion.button
               key={option}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setActiveFilter(option)}
               className={`px-6 py-2.5 text-xs tracking-[0.15em] uppercase transition-all duration-300 ${
                 activeFilter === option
-                  ? 'bg-[var(--gold-metallic)] text-[var(--sky-obsidian)] font-bold shadow-md'
+                  ? 'bg-[var(--gold-metallic)] text-[var(--sky-obsidian)] font-bold shadow-lg pulse-glow'
                   : 'border border-[var(--slate-border)] text-[var(--text-secondary)] hover:border-[var(--gold-metallic)] hover:text-white bg-[var(--sky-midnight)]'
               }`}
             >
               {option}
-            </button>
+            </motion.button>
           ))}
         </motion.div>
 
-        {/* 4-Column Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-          {filtered.map((res, i) => (
-            <motion.div
-              key={res.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.08 * i }}
-              className="glass-card border border-[var(--slate-border)] hover:border-[var(--gold-metallic)]/60 transition-all duration-300 flex flex-col justify-between p-6 bg-[#0d121c] group"
-            >
-              <div>
-                {/* Header row */}
-                <div className="flex items-center justify-between pb-3 border-b border-[var(--slate-border)]/50 mb-4">
-                  <h3 className="text-lg font-light text-white group-hover:text-[var(--gold-metallic)] transition-colors" style={{ fontFamily: 'var(--font-playfair)' }}>
-                    {res.name}
-                  </h3>
-                  <span className="text-[10px] tracking-wider uppercase text-[var(--gold-metallic)] font-semibold border border-[var(--gold-metallic)]/30 px-2 py-0.5 rounded">
-                    F{res.floor}
-                  </span>
-                </div>
-
-                {/* Specs */}
-                <div className="space-y-2 text-xs text-[var(--text-secondary)] mb-6 font-light">
-                  <div className="flex justify-between">
-                    <span>Bedrooms:</span>
-                    <span className="text-white font-medium">{res.beds} Beds</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Bathrooms:</span>
-                    <span className="text-white font-medium">{res.baths} Baths</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Floor Area:</span>
-                    <span className="text-white font-medium">{res.sqft} sq ft</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Price & Link */}
-              <div className="pt-4 border-t border-[var(--slate-border)]/50 flex items-center justify-between">
+        {/* 4-Column Grid with Framer Motion Layout & Hover Lift */}
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+          <AnimatePresence>
+            {filtered.map((res, i) => (
+              <motion.div
+                layout
+                key={res.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                transition={{ duration: 0.4, delay: 0.05 * i }}
+                className="glass-card border border-[var(--slate-border)] hover:border-[var(--gold-metallic)] transition-all duration-300 flex flex-col justify-between p-6 bg-[#0d121c] group shine-sweep-hover shadow-xl"
+              >
                 <div>
-                  <div className="text-[10px] uppercase text-[var(--text-muted)] tracking-wider">Price</div>
-                  <div className="text-sm font-bold gold-text">{res.price}</div>
+                  {/* Header row */}
+                  <div className="flex items-center justify-between pb-3 border-b border-[var(--slate-border)]/50 mb-4">
+                    <h3 className="text-lg font-light text-white group-hover:text-[var(--gold-metallic)] transition-colors" style={{ fontFamily: 'var(--font-playfair)' }}>
+                      {res.name}
+                    </h3>
+                    <span className="text-[10px] tracking-wider uppercase text-[var(--gold-metallic)] font-semibold border border-[var(--gold-metallic)]/30 px-2 py-0.5 rounded">
+                      F{res.floor}
+                    </span>
+                  </div>
+
+                  {/* Specs */}
+                  <div className="space-y-2 text-xs text-[var(--text-secondary)] mb-6 font-light">
+                    <div className="flex justify-between">
+                      <span>Bedrooms:</span>
+                      <span className="text-white font-medium">{res.beds} Beds</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Bathrooms:</span>
+                      <span className="text-white font-medium">{res.baths} Baths</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Floor Area:</span>
+                      <span className="text-white font-medium">{res.sqft} sq ft</span>
+                    </div>
+                  </div>
                 </div>
-                <a
-                  href="#contact"
-                  className="text-xs tracking-widest uppercase text-[var(--gold-metallic)] hover:text-white flex items-center gap-1 group/btn font-semibold"
-                >
-                  INQUIRE
-                  <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+
+                {/* Bottom Price & Link */}
+                <div className="pt-4 border-t border-[var(--slate-border)]/50 flex items-center justify-between">
+                  <div>
+                    <div className="text-[10px] uppercase text-[var(--text-muted)] tracking-wider">Price</div>
+                    <div className="text-sm font-bold gold-text">{res.price}</div>
+                  </div>
+                  <a
+                    href="#contact"
+                    className="text-xs tracking-widest uppercase text-[var(--gold-metallic)] hover:text-white flex items-center gap-1 group/btn font-semibold"
+                  >
+                    INQUIRE
+                    <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1.5 transition-transform" />
+                  </a>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
     </section>
   )

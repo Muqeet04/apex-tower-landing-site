@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
-import { ArrowRight, ChevronDown } from 'lucide-react'
+import { ArrowRight, ChevronDown, Sparkles } from 'lucide-react'
 import Image from 'next/image'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -50,17 +50,22 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--sky-obsidian)]/80 via-transparent to-[var(--sky-obsidian)]/80" />
       </div>
 
+      {/* Floating Decorative Ambient Orbs */}
+      <div className="absolute top-1/4 left-10 w-72 h-72 bg-[var(--amber-glow)]/10 rounded-full blur-[120px] animate-float-slow pointer-events-none" />
+      <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-[var(--gold-metallic)]/10 rounded-full blur-[140px] animate-float pointer-events-none" />
+
       {/* Content — Centered */}
       <div className="relative z-10 max-w-[1400px] w-full mx-auto px-8 md:px-16 flex flex-col justify-center items-center text-center">
-        {/* Category Tag */}
+        {/* Floating Category Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-6 flex items-center justify-center gap-3"
+          className="mb-6 flex items-center justify-center gap-3 animate-float"
         >
           <span className="w-8 h-[2px] bg-[var(--gold-metallic)]" />
-          <span className="text-xs md:text-sm tracking-[0.35em] uppercase text-[var(--gold-metallic)] font-semibold">
+          <span className="text-xs md:text-sm tracking-[0.35em] uppercase text-[var(--gold-metallic)] font-semibold flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-[var(--amber-glow)] animate-spin" style={{ animationDuration: '8s' }} />
             LUXURY RESIDENCES IN MANHATTAN
           </span>
           <span className="w-8 h-[2px] bg-[var(--gold-metallic)]" />
@@ -91,34 +96,48 @@ export default function Hero() {
           An 85-story architectural landmark redefining ultra-luxury living in Midtown Manhattan with panoramic 360° skyline vistas.
         </motion.p>
 
-        {/* CTA Buttons — Centered */}
+        {/* CTA Buttons — Centered with Floating & Hover Animations */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
           className="mt-10 flex flex-wrap items-center justify-center gap-5"
         >
-          <a
+          <motion.a
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.98 }}
             href="#residences"
-            className="inline-flex items-center justify-center gap-3 px-9 py-4 bg-[var(--gold-metallic)] text-[var(--sky-obsidian)] font-bold text-xs tracking-[0.2em] uppercase rounded-sm hover:bg-[var(--amber-glow)] hover:shadow-[0_0_35px_rgba(212,175,55,0.45)] transition-all duration-300"
+            className="inline-flex items-center justify-center gap-3 px-9 py-4 bg-[var(--gold-metallic)] text-[var(--sky-obsidian)] font-bold text-xs tracking-[0.2em] uppercase rounded-sm pulse-glow transition-all duration-300 shine-sweep-hover"
           >
             EXPLORE RESIDENCES
             <ArrowRight className="w-4 h-4" />
-          </a>
-          <a
+          </motion.a>
+          <motion.a
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.98 }}
             href="#explorer"
             className="inline-flex items-center justify-center gap-3 px-9 py-4 glass border border-white/20 text-white font-bold text-xs tracking-[0.2em] uppercase rounded-sm hover:border-[var(--gold-metallic)] hover:text-[var(--gold-metallic)] transition-all duration-300"
           >
             VIEW 3D TOWER
-          </a>
+          </motion.a>
         </motion.div>
       </div>
 
-      {/* Scroll Hint */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-xs tracking-[0.25em] uppercase text-[var(--text-muted)]">
+      {/* Floating Animated Scroll Hint */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-xs tracking-[0.25em] uppercase text-[var(--text-muted)] animate-float"
+      >
         <span>SCROLL TO DISCOVER</span>
-        <ChevronDown className="w-4 h-4 text-[var(--gold-metallic)] animate-bounce" />
-      </div>
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <ChevronDown className="w-4 h-4 text-[var(--gold-metallic)]" />
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

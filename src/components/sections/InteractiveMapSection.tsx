@@ -162,7 +162,8 @@ export default function InteractiveMapSection() {
                 const Icon = poi.icon
                 const isActive = activePOI?.id === poi.id
                 return (
-                  <button
+                  <motion.button
+                    whileHover={{ x: 4 }}
                     key={poi.id}
                     onClick={() => setActivePOI(poi)}
                     className={`w-full text-left p-4 rounded-lg border transition-all duration-300 ${
@@ -187,19 +188,21 @@ export default function InteractiveMapSection() {
                         {poi.walkTime}
                       </span>
                     </div>
-                  </button>
+                  </motion.button>
                 )
               })}
             </div>
 
             {/* Gold Button */}
-            <a
+            <motion.a
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               href="#contact"
               className="inline-flex items-center justify-center gap-2 w-full py-4 bg-[var(--gold-metallic)] text-[var(--sky-obsidian)] font-bold text-xs tracking-[0.2em] uppercase rounded-sm hover:bg-[var(--amber-glow)] transition-all duration-300"
             >
               EXPLORE NEIGHBORHOOD
               <ArrowRight className="w-4 h-4" />
-            </a>
+            </motion.a>
           </motion.div>
 
           {/* Right Column: Interactive Map Canvas (7 Columns) */}
@@ -222,14 +225,15 @@ export default function InteractiveMapSection() {
                 }}
               />
 
-              {/* Central Radar Rings */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] border border-[var(--gold-metallic)]/20 rounded-full pointer-events-none" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] border border-[var(--gold-metallic)]/10 rounded-full pointer-events-none" />
+              {/* Continuous Rotating Radar Rings */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[360px] h-[360px] border border-[var(--gold-metallic)]/25 rounded-full pointer-events-none animate-rotate-slow" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[540px] h-[540px] border border-[var(--gold-metallic)]/15 rounded-full pointer-events-none animate-rotate-slow" style={{ animationDirection: 'reverse', animationDuration: '60s' }} />
 
-              {/* Central Landmark Pin — Apex Tower */}
+              {/* Central Landmark Pin — Apex Tower with Rippling Pulse */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
                 <div className="relative flex flex-col items-center">
-                  <div className="w-10 h-10 bg-[var(--gold-metallic)] rounded-full shadow-[0_0_30px_rgba(212,175,55,0.8)] flex items-center justify-center border-2 border-white animate-pulse">
+                  <div className="absolute -inset-3 bg-[var(--gold-metallic)]/30 rounded-full animate-ping pointer-events-none" />
+                  <div className="w-10 h-10 bg-[var(--gold-metallic)] rounded-full shadow-[0_0_30px_rgba(212,175,55,0.8)] flex items-center justify-center border-2 border-white pulse-glow">
                     <Navigation className="w-5 h-5 text-[var(--sky-obsidian)] fill-current" />
                   </div>
                   <div className="mt-2 glass px-3 py-1 rounded border border-[var(--gold-metallic)]/50 shadow-2xl backdrop-blur-md">
@@ -244,7 +248,8 @@ export default function InteractiveMapSection() {
                 const isActive = activePOI?.id === poi.id
 
                 return (
-                  <button
+                  <motion.button
+                    whileHover={{ scale: 1.2 }}
                     key={poi.id}
                     onClick={() => setActivePOI(poi)}
                     className={`absolute z-20 group -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${
@@ -267,7 +272,7 @@ export default function InteractiveMapSection() {
                     }`}>
                       {poi.name}
                     </div>
-                  </button>
+                  </motion.button>
                 )
               })}
             </div>
